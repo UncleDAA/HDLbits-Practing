@@ -1,3 +1,7 @@
+module top_module( 
+    input [15:0] a, b, c, d, e, f, g, h, i,
+    input [3:0] sel,
+    output [15:0] out );
     always @(*) begin
         case(sel)
             4'd0:out=a;
@@ -9,6 +13,8 @@
             4'd6:out=g;
             4'd7:out=h;
             4'd8:out=i;
-            default:out=4'hffff;
+            default:out[15:0]=16'hffff;
         endcase
     end
+
+endmodule
