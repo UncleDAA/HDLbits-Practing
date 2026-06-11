@@ -5,7 +5,7 @@ module top_module (
 );
     reg [7:0] last_in;
     always @(posedge clk) begin
-        pedge=in&~last_in;
+        pedge<=in&~last_in;
         last_in<=in;
     end
         
