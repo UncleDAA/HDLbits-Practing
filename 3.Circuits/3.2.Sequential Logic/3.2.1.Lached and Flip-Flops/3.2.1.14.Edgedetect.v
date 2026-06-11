@@ -10,3 +10,6 @@ module top_module (
     end
         
 endmodule
+
+// 我對題目有一點誤解 總之output是在找edge本身 所以in從0->1的時候會被記錄下來
+// in從0->1的時候:in = 1 且 last =0
