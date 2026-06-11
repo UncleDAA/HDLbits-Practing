@@ -7,13 +7,15 @@ module top_module (
 );
     always @(posedge clk) begin
         if(~resetn)
-            q=0;
+            q<=0;
         else begin
             if(byteena[1])
-                q[15:8]=d[15:8];
+                q[15:8]<=d[15:8];
             if(byteena[0])
-                q[7:0]=d[7:0];
+                q[7:0]<=d[7:0];
         end
     end
            
 endmodule
+
+// 使用具有timer特性的賦值時避免使用=應以<=代之
