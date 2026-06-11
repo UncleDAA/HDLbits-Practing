@@ -3,6 +3,6 @@ module top_module (
     input in, 
     output out);
     always @(posedge clk) begin
-        out=in^out;
+        out<=in^out;
     end
 endmodule
