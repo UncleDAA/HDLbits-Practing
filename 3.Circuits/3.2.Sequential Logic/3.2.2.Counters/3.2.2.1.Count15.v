@@ -5,9 +5,9 @@ module top_module (
     reg [3:0] current = 4'b0;
     always @(posedge clk) begin
         if(reset)
-            current=0;
+            current<=0;
     	else
-            current+=1;
+            current<=current+1;
     end
     assign q=current;
 endmodule
