@@ -30,7 +30,9 @@ module count60 (
     input ena,
     output [7:0] q);
     always @(posedge clk) begin
-        if(ena) begin
+        if(reset)
+            q <= 8'd0;          
+        else if(ena) begin             //這樣的寫法才能凸顯reset的優先級
             if(q[7:0] == 8'h59)
                 q[7:0] <= 8'h0;
             else begin
@@ -42,8 +44,7 @@ module count60 (
                     q[3:0] <= q[3:0] + 4'd1;
             end 
         end
-        if(reset)
-            q <= 8'd0;        
+      
     end
 endmodule
         
@@ -53,7 +54,9 @@ module count12 (
     input ena,
     output [7:0] q);
     always @(posedge clk) begin
-        if(ena) begin
+        if(reset)
+            q <= 8'h12;         
+        else if(ena) begin
             if(q[7:0]==8'h12) begin
                 q[7:0]=8'h1;
             end
@@ -65,8 +68,6 @@ module count12 (
                 else
                     q[3:0] <= q[3:0] + 4'd1;
             end
-        end
-        if(reset)
-            q <= 8'h12;        
+        end   
     end
 endmodule        
