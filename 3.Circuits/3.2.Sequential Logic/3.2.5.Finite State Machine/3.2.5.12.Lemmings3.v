@@ -13,27 +13,29 @@ module top_module(
 	parameter LEFT=3'b000,RIGHT=3'b001,AAAH_R=3'b010,AAAH_L=3'b011,DIG_R=3'b100,DIG_L=3'b101;
 	always @(*) begin
         if(!ground) begin
-            // falling
+            // start falling
             case(state)
+                // slop walking / stop digging
                 LEFT:next_state=AAAH_L;
                 DIG_L:next_state=AAAH_L;
                 RIGHT:next_state=AAAH_R;
                 DIG_R:next_state=AAAH_R;
+                // keep falling
                 default next_state=state;
             endcase
         end
         else begin
-            // stop falling
-            if(state==AAAH_R | state==AAAH_L) begin
+            if(state!=RIGHT & state!=LEFT) begin
                 case(state)
+                    // stop falling
                     AAAH_R:next_state=RIGHT;
                     AAAH_L:next_state=LEFT;
+                    // keep digging
+                    default next_state=state;
                 endcase
             end
-            else if(state==DIG_R | state==DIG_L) begin
-                next_state=state;
-            end
             else begin
+                //stop walking / start digging
                 if(dig) begin
                     case(state)
                         LEFT:next_state=DIG_L;
@@ -41,6 +43,7 @@ module top_module(
                     endcase
                 end
                 else begin
+                    //start walking
                 	case({bump_left,bump_right})
             			2'b00:next_state=state;
             			2'b10:next_state=RIGHT;
@@ -60,9 +63,7 @@ module top_module(
         else begin
             state<=next_state;
         end
-    end
-           
-
+	end
     // Output logic
     assign walk_left=state==LEFT;
     assign walk_right=state==RIGHT;
