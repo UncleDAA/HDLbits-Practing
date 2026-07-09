@@ -24,6 +24,9 @@ module top_module (
     end
     always @(posedge clk,posedge areset) begin
         if(areset) begin
+            // 題目提到:The conversion begins when Reset is released and stops when Reset is asserted.
+            // 所以不用考慮overlapping問題
+            // 以硬體思維來說 reset也不應該考慮overlapping(那是前面sequence中stop bit會出現的問題)
             state<=ZERO_CARRY;
         end
         else state<=next;
