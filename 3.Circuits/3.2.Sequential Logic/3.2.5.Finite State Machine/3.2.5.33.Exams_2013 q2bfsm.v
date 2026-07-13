@@ -6,6 +6,61 @@ module top_module (
     output f,
     output g
 ); 
+	parameter A=0,B=1,X=2,Y=3,O=4,I=5;
+    reg [2:0]state,next;
+    reg [2:0]seqx;
+    reg [1:0]county;
+    always @(*) begin
+        case(state)
+            A: next=B;
+            B: next=X;
+            X: begin
+                if({seqx[1:0],x}==3'b101) next=Y;
+                else next=X;
+            end
+            Y: begin
+                if(y) next=I;
+                else if(county==2'b01 & ~y) next=O;
+                else next=Y;
+            end
+            O: next=O;
+            I: next=I;
+                
+        endcase
+    end
+    always @(posedge clk) begin
+        if(~resetn) begin
+            state<=A;
+            seqx<=0;
+            county<=0;
+        end
+        else begin
+            state<=next;
+            case(state)
+                X: begin
+                    seqx<={seqx[1:0],x};
+                end
+                Y: begin
+                    county<=county+1;
+                end
+            endcase
+        end
+    end
+	assign f= state==B;
+    assign g= (state==Y || state==I);
+               
+endmodule
+
+// REF //
+
+module top_module (
+    input clk,
+    input resetn,    // active-low synchronous reset
+    input x,
+    input y,
+    output f,
+    output g
+); 
 	parameter A=0,B=1,X1=2,X2=3,X3=4,Y1=5,Y2=6,O=7,I=8;
     reg [3:0]state,next;
 
