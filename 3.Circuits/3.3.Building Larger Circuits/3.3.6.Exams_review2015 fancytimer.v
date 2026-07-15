@@ -70,6 +70,10 @@ module top_module (
 endmodule
 
 // REF //
+// 此寫法最省硬體資源： 
+// 雖然看起來狀態很多 但使用 One-Hot Encoding 合成
+// FPGA 只需要 10 個正反器。
+// 相比之下 Code 1 則需要 4 個狀態正反器 + 4 個移位正反器 + 2 個計數正反器 = 10 個正反器，加上還需要一堆額外的比較邏輯（加法器、數值比較器）
 module top_module (
     input clk,
     input reset,      // Synchronous reset
