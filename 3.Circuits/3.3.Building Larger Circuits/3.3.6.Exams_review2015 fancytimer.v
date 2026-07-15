@@ -66,6 +66,7 @@ module top_module (
                 COUNTING: begin
                     if(thousand_counter==1) begin
                         count<=count-1;
+						//  if(count>1) count<=count-1; 這樣寫比較保險 可以避免overflow
                         thousand_counter<=10'd1000;
                     end
                     else thousand_counter<=thousand_counter-1;
@@ -148,6 +149,7 @@ module top_module (
                 COUNTING: begin
                     if(thousand_counter==1) begin
                         count<=count-1;
+						//  if(count>1) count<=count-1; 這樣寫比較保險 可以避免overflow
                         thousand_counter<=10'd1000;
                     end
                     else thousand_counter<=thousand_counter-1;
