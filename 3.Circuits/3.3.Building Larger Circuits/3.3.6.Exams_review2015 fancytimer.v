@@ -11,7 +11,22 @@ module top_module (
     reg [3:0]search_buffer;
     reg [1:0]counter;
     reg [9:0]thousand_counter;
-    
+    // 這一段主要牽涉到counter的設計邏輯如下
+	//  combinational circuit中看到的是變化前的counter 計算完成後處理sequential中+1的動作
+	//  1.以counter為例:
+    //	clock 1:counter=0 所以next=shift 將data加入count 結束後counter=1
+	//	clock 2:counter=1 所以next=shift 將data加入count 結束後counter=2
+	//	clock 3:counter=2 所以next=shift 將data加入count 結束後counter=3
+	//	clock 4:counter=3 注意!!!!next=counting 將data加入count 結束後counter=4
+	//  因為clock 4之後要進入COUTING state所以應以counter=3做判斷
+	//  2.以thousand_counter為例:
+	//  clock 1:counter=1000 執行目標動作 結束後counter=999
+	//  clock 2:counter= 999 執行目標動作 結束後counter=998
+	//  clock 3:counter= 998 執行目標動作 結束後counter=997
+	      :
+	//  clock 999:counter= 2 執行目標動作 結束後counter=1
+	//  clock 1000:counter=1 執行目標動作 結束後counter=0
+	//  在clock1000數到1000 要執行特殊動作 所以sequential中使用thousand_counter=1為條件
     always @(*) begin
         case(state)
             SEARCH: begin
