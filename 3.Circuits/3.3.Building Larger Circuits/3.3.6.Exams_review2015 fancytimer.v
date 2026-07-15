@@ -70,4 +70,74 @@ module top_module (
 endmodule
 
 // REF //
-
+module top_module (
+    input clk,
+    input reset,      // Synchronous reset
+    input data,
+    output [3:0] count,
+    output counting,
+    output done,
+    input ack );
+    parameter SEARCH_1=0,SEARCH_11=1,SEARCH_110=2,SEARCH_1101=3,SHIFT_1=4,SHIFT_2=5,SHIFT_3=6,SHIFT_4=7,COUNTING=8,DONE=9;
+    reg [3:0]state,next;
+    reg [9:0]thousand_counter;
+    
+    always @(*) begin
+        case(state)
+            SEARCH_1: begin
+                if(data) next=SEARCH_11;
+                else next=SEARCH_1;
+            end
+            SEARCH_11: begin
+                if(data) next=SEARCH_110;
+                else next=SEARCH_1;
+            end
+            SEARCH_110: begin
+                if(!data) next=SEARCH_1101;
+                else next=SEARCH_110;
+            end
+            SEARCH_1101: begin
+                if(data) next=SHIFT_1;
+                else next=SEARCH_1;
+            end
+            SHIFT_1: next=SHIFT_2;
+            SHIFT_2: next=SHIFT_3;
+            SHIFT_3: next=SHIFT_4;
+            SHIFT_4: next=COUNTING;
+            COUNTING: begin
+                if(thousand_counter==1 & count==0) next=DONE;
+                else next=COUNTING;
+            end
+            DONE: begin
+                if(ack) next=SEARCH_1;
+                else next=DONE;
+            end
+        endcase
+    end
+    always @(posedge clk) begin
+        if(reset) begin
+            state<=SEARCH_1;
+            thousand_counter<=10'd1000;
+        end
+        else begin
+            state<=next;
+            case(state)
+                SHIFT_1:count[3]<=data;
+                SHIFT_2:count[2]<=data;
+                SHIFT_3:count[1]<=data;
+                SHIFT_4:count[0]<=data;
+                COUNTING: begin
+                    if(thousand_counter==1) begin
+                        count<=count-1;
+                        thousand_counter<=10'd1000;
+                    end
+                    else thousand_counter<=thousand_counter-1;
+                end
+                DONE: thousand_counter<=10'd1000;
+            endcase
+        end
+    end
+    assign counting = (state == COUNTING);
+    assign done = (state == DONE);
+	
+endmodule
