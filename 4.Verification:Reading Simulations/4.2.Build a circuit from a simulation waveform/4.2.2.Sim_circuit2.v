@@ -9,3 +9,16 @@ module top_module (
         
 
 endmodule
+
+// REF //
+  cd 00 01 11 10
+ab    
+
+00    1  0  1  0
+
+01    0  1  0  1
+
+11    0  1  0  1
+
+10    1  0  1  0
+
